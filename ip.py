@@ -38,7 +38,7 @@ def get_ip(domain, nowStr):
         "public_contact_email": "",
         """
         "ipv4": "",
-        "screenshot_name": ""
+        "screenshot_path": ""
     }
 
     try:
@@ -48,8 +48,8 @@ def get_ip(domain, nowStr):
         )
 
         screenshot = get_full_screenshot_image(driver)
-        screenshot_name = domain + '_ip_' + nowStr + '.png'
-        screenshot.save(screenshot_name)
+        screenshot_path = 'screenshot/' + domain + '_ip_' + nowStr + '.png'
+        screenshot.save(screenshot_path)
 
         # TODO
         # whoisの検索でデータが取得できなかった場合、このサイトの情報を使用する
@@ -68,7 +68,8 @@ def get_ip(domain, nowStr):
         """
         data["ipv4"] = driver.find_element_by_xpath(
             '//*[@id="ip_address"]').text
-        data['screenshot_name'] = screenshot_name
+
+        data['screenshot_path'] = screenshot_path
     except:
         print("error")
 

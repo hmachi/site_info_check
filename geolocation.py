@@ -28,7 +28,7 @@ def get_geolocation(domain, ipv4, nowStr):
     sleep(5)
 
     data = {
-        "screenshot_name": ""
+        "screenshot_path": ""
     }
 
     try:
@@ -38,10 +38,10 @@ def get_geolocation(domain, ipv4, nowStr):
         )
 
         screenshot = get_full_screenshot_image(driver)
-        screenshot_name = domain + '_geolocation_' + nowStr + '.png'
-        screenshot.save(screenshot_name)
+        screenshot_path = 'screenshot/' + domain + '_geolocation_' + nowStr + '.png'
+        screenshot.save(screenshot_path)
 
-        data['screenshot_name'] = screenshot_name
+        data['screenshot_path'] = screenshot_path
 
     except:
         print("error")

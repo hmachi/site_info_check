@@ -3,4 +3,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 
 def setup_chrome_webdriver():
+    """
+    chromeWebドライバーをダウンロードする
+    """
     return webdriver.Chrome(ChromeDriverManager().install())

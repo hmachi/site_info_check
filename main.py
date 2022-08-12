@@ -1,16 +1,19 @@
 import datetime
+from urllib.parse import urlparse
 
 from whois import get_whois
 from ip import get_ip
 from geolocation import get_geolocation
 from document import create_document
 
-print("domain情報を入力")
-print("例）example.com")
+print("urlを入力")
+print("例）https://example.com")
 
-# TODO
-# domain = input()
-domain = "yahoo.co.jp"
+url = input()
+
+parsed_url = urlparse(url)
+
+domain = parsed_url.netloc
 
 now = datetime.datetime.now(datetime.timezone(
     datetime.timedelta(hours=9)))
@@ -20,4 +23,4 @@ whois = get_whois(domain)
 ip = get_ip(domain, nowStr)
 geolocation = get_geolocation(domain, ip['ipv4'], nowStr)
 
-create_document(whois, ip, geolocation, domain, nowStr)
+create_document(whois, ip, geolocation, url, domain, nowStr)
