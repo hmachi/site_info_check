@@ -31,9 +31,6 @@ def get_whois(domain):
         "admin_email": "",
         "creation_date": "",
         "registrar": "",
-        "admin_contact": "",
-        "technical_contact": "",
-        "public_contact_email": ""
     }
 
     try:
@@ -58,12 +55,6 @@ def get_whois(domain):
             '//*[@id="wls6"]/td').text
         data["registrar"] = driver.find_element_by_xpath(
             '//*[@id="wls7"]/td').text
-        data["admin_contact"] = driver.find_element_by_xpath(
-            '//*[@id="wls8"]/td').text
-        data["technical_contact"] = driver.find_element_by_xpath(
-            '//*[@id="wls9"]/td').text
-        data["public_contact_email"] = driver.find_element_by_xpath(
-            '//*[@id="wls10"]/td').text
 
     except:
         print("error")

@@ -28,6 +28,7 @@ def get_geolocation(domain, ipv4, nowStr):
     sleep(5)
 
     data = {
+        "country": "",
         "screenshot_path": ""
     }
 
@@ -36,6 +37,9 @@ def get_geolocation(domain, ipv4, nowStr):
         driver.find_element_by_xpath(
             '//*[@id="ipresult"]/div[2]/div[1]/table/tbody/tr[2]/td[1]'
         )
+
+        data["country"] = driver.find_element_by_xpath(
+            '//*[@id="ipresult"]/div[2]/div[1]/table/tbody/tr[2]/td[1]').text
 
         screenshot = get_full_screenshot_image(driver)
         screenshot_path = 'screenshot/' + domain + '_geolocation_' + nowStr + '.png'

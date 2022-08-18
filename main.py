@@ -5,6 +5,7 @@ from whois import get_whois
 from ip import get_ip
 from geolocation import get_geolocation
 from document import create_document
+from upload import upload_document
 
 print("urlを入力")
 print("例）https://example.com")
@@ -23,4 +24,6 @@ whois = get_whois(domain)
 ip = get_ip(domain, nowStr)
 geolocation = get_geolocation(domain, ip['ipv4'], nowStr)
 
-create_document(whois, ip, geolocation, url, domain, nowStr)
+document = create_document(whois, ip, geolocation, url, domain, nowStr)
+
+upload_document(document)

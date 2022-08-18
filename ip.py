@@ -24,7 +24,6 @@ def get_ip(domain, nowStr):
     sleep(10)
 
     data = {
-        """
         "domain_name": "",
         "expiration_date": "",
         "domain_status": "",
@@ -33,11 +32,9 @@ def get_ip(domain, nowStr):
         "admin_email": "",
         "creation_date": "",
         "registrar": "",
-        "admin_contact": "",
-        "technical_contact": "",
-        "public_contact_email": "",
-        """
         "ipv4": "",
+        "company": "",
+        "host": "",
         "screenshot_path": ""
     }
 
@@ -51,23 +48,22 @@ def get_ip(domain, nowStr):
         screenshot_path = 'screenshot/' + domain + '_ip_' + nowStr + '.png'
         screenshot.save(screenshot_path)
 
-        # TODO
-        # whoisの検索でデータが取得できなかった場合、このサイトの情報を使用する
-        """
-        data["domain_name"] = driver.find_element_by_xpath('').text
-        data["expiration_date"] = driver.find_element_by_xpath('').text
-        data["domain_status"] = driver.find_element_by_xpath('').text
-        data["name_server"] = driver.find_element_by_xpath('').text
-        data["registrant_email"] = driver.find_element_by_xpath('').text
-        data["admin_email"] = driver.find_element_by_xpath('').text
-        data["creation_date"] = driver.find_element_by_xpath('').text
-        data["registrar"] = driver.find_element_by_xpath('').text
-        data["admin_contact"] = driver.find_element_by_xpath('').text
-        data["technical_contact"] = driver.find_element_by_xpath('').text
-        data["public_contact_email"] = driver.find_element_by_xpath('').text
-        """
+        data["domain_name"] = driver.find_element_by_xpath(
+            '//*[@id="network_table_section"]/div[2]/div[1]/table[2]/tbody/tr[1]/td/a').text
+        data["expiration_date"] = ""  # driver.find_element_by_xpath('').text
+        data["domain_status"] = ""  # driver.find_element_by_xpath('').text
+        data["name_server"] = ""  # driver.find_element_by_xpath('').text
+        data["registrant_email"] = ""  # driver.find_element_by_xpath('').text
+        data["admin_email"] = ""  # driver.find_element_by_xpath('').text
+        data["creation_date"] = ""  # driver.find_element_by_xpath('').text
+        data["registrar"] = ""  # driver.find_element_by_xpath('').text
+
         data["ipv4"] = driver.find_element_by_xpath(
             '//*[@id="ip_address"]').text
+        data["company"] = driver.find_element_by_xpath(
+            '//*[@id="background_table_section"]/div[2]/div/table[1]/tbody/tr[1]/td').text
+        data["host"] = driver.find_element_by_xpath(
+            '//*[@id="network_table_section"]/div[2]/div[1]/table[1]/tbody/tr[3]/td').text
 
         data['screenshot_path'] = screenshot_path
     except:
