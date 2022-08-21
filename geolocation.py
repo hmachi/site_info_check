@@ -2,7 +2,6 @@ from time import sleep
 from selenium.webdriver.common.alert import Alert
 
 from common import setup_chrome_webdriver
-from screenshot import get_full_screenshot_image
 
 
 def get_geolocation(domain, ipv4, nowStr):
@@ -29,7 +28,7 @@ def get_geolocation(domain, ipv4, nowStr):
 
     data = {
         "country": "",
-        "screenshot_path": ""
+        "screenshot_path_list": []
     }
 
     try:
@@ -41,11 +40,39 @@ def get_geolocation(domain, ipv4, nowStr):
         data["country"] = driver.find_element_by_xpath(
             '//*[@id="ipresult"]/div[2]/div[1]/table/tbody/tr[2]/td[1]').text
 
-        screenshot = get_full_screenshot_image(driver)
-        screenshot_path = 'screenshot/' + domain + '_geolocation_' + nowStr + '.png'
-        screenshot.save(screenshot_path)
+        index = 1
+        screenshot_path = 'screenshot/' + domain + '_geolocation_' + nowStr + '_'
 
-        data['screenshot_path'] = screenshot_path
+        driver.set_window_size(1000, 850)
+
+        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        data['screenshot_path_list'].append(
+            screenshot_path + str(index) + ".png")
+        index += 1
+
+        driver.execute_script("window.scrollBy(0, 450);")
+        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        data['screenshot_path_list'].append(
+            screenshot_path + str(index) + ".png")
+        index += 1
+
+        driver.execute_script("window.scrollBy(0, 600);")
+        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        data['screenshot_path_list'].append(
+            screenshot_path + str(index) + ".png")
+        index += 1
+
+        driver.execute_script("window.scrollBy(0, 400);")
+        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        data['screenshot_path_list'].append(
+            screenshot_path + str(index) + ".png")
+        index += 1
+
+        driver.execute_script("window.scrollBy(0, 600);")
+        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        data['screenshot_path_list'].append(
+            screenshot_path + str(index) + ".png")
+        index += 1
 
     except:
         print("error")

@@ -32,8 +32,18 @@ def create_document(whois, ip, geolocation, url, domain, nowStr):
         replace_text(paragraph, whois, ip, geolocation, now, url, domain)
 
     # 画像の貼り付け
-    doc.add_picture(ip['screenshot_path'], width=Inches(6.2))
-    doc.add_picture(geolocation['screenshot_path'], width=Inches(6.2))
+    for index, screenshot_path in enumerate(ip['screenshot_path_list']):
+        doc.add_picture(screenshot_path, width=Inches(6.2))
+        if index % 2 == 0:
+            doc.add_paragraph()
+
+    # 改ページ
+    doc.add_page_break()
+
+    for index, screenshot_path in enumerate(geolocation['screenshot_path_list']):
+        doc.add_picture(screenshot_path, width=Inches(6.2))
+        if index % 2 == 0:
+            doc.add_paragraph()
 
     doc.save(new_doc_path)
 
@@ -54,21 +64,22 @@ def replace_text(paragraph, whois, ip, geolocation, now, url, domain):
             now.strftime('%m') + "月" + now.strftime('%d') + "日"
 
     if paragraph.text == "${name}":
-        paragraph.text = ip["company"]
+        paragraph.text = ip["company"] if ip["company"] != "" else "不明"
     if paragraph.text == "${url}":
         paragraph.text = url
     if paragraph.text == "${url_brackets}":
         paragraph.text = "【" + url + "】"
     if paragraph.text == "${address}":
-        paragraph.text = geolocation["country"]
+        paragraph.text = geolocation["country"] if geolocation["country"] != "" else "不明"
     if paragraph.text == "${domain}":
         paragraph.text = domain
     if paragraph.text == "${host}":
-        paragraph.text = "ホスト名：" + ip["host"]
+        paragraph.text = "ホスト名：" + (ip["host"] if ip["host"] != "" else "不明")
     if paragraph.text == "${area}":
-        paragraph.text = "エリア：" + geolocation["country"]
+        paragraph.text = "エリア：" + \
+            (geolocation["country"] if geolocation["country"] != "" else "不明")
     if paragraph.text == "${ipv4}":
-        paragraph.text = ip["ipv4"]
+        paragraph.text = ip["ipv4"] if ip["ipv4"] != "" else "不明"
 
     if paragraph.text == "${domain_name}":
         paragraph.text = whois["domain_name"] if whois["domain_name"] != "" else (

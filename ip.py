@@ -1,7 +1,6 @@
 from time import sleep
 
 from common import setup_chrome_webdriver
-from screenshot import get_full_screenshot_image
 
 
 def get_ip(domain, nowStr):
@@ -21,7 +20,10 @@ def get_ip(domain, nowStr):
     driver.find_element_by_xpath(
         '//*[@id="site_report_query"]/input').click()
 
-    sleep(10)
+    sleep(15)
+
+    driver.find_element_by_xpath(
+        '//*[@id="consent-form"]/div/button[2]').click()
 
     data = {
         "domain_name": "",
@@ -35,7 +37,7 @@ def get_ip(domain, nowStr):
         "ipv4": "",
         "company": "",
         "host": "",
-        "screenshot_path": ""
+        "screenshot_path_list": []
     }
 
     try:
@@ -43,10 +45,6 @@ def get_ip(domain, nowStr):
         driver.find_element_by_xpath(
             '/html/body/div[1]/main/header/div/div/h1'
         )
-
-        screenshot = get_full_screenshot_image(driver)
-        screenshot_path = 'screenshot/' + domain + '_ip_' + nowStr + '.png'
-        screenshot.save(screenshot_path)
 
         data["domain_name"] = driver.find_element_by_xpath(
             '//*[@id="network_table_section"]/div[2]/div[1]/table[2]/tbody/tr[1]/td/a').text
@@ -65,7 +63,51 @@ def get_ip(domain, nowStr):
         data["host"] = driver.find_element_by_xpath(
             '//*[@id="network_table_section"]/div[2]/div[1]/table[1]/tbody/tr[3]/td').text
 
-        data['screenshot_path'] = screenshot_path
+        index = 1
+        screenshot_path = 'screenshot/' + domain + '_ip_' + nowStr + '_'
+
+        driver.set_window_size(1000, 870)
+
+        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        data['screenshot_path_list'].append(
+            screenshot_path + str(index) + ".png")
+        index += 1
+
+        driver.execute_script("window.scrollBy(0, 430);")
+        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        data['screenshot_path_list'].append(
+            screenshot_path + str(index) + ".png")
+        index += 1
+
+        driver.execute_script("window.scrollBy(0, 620);")
+        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        data['screenshot_path_list'].append(
+            screenshot_path + str(index) + ".png")
+        index += 1
+
+        driver.execute_script("window.scrollBy(0, 400);")
+        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        data['screenshot_path_list'].append(
+            screenshot_path + str(index) + ".png")
+        index += 1
+
+        driver.execute_script("window.scrollBy(0, 400);")
+        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        data['screenshot_path_list'].append(
+            screenshot_path + str(index) + ".png")
+        index += 1
+
+        driver.execute_script("window.scrollBy(0, 500);")
+        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        data['screenshot_path_list'].append(
+            screenshot_path + str(index) + ".png")
+        index += 1
+
+        driver.execute_script("window.scrollBy(0, 500);")
+        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        data['screenshot_path_list'].append(
+            screenshot_path + str(index) + ".png")
+
     except:
         print("error")
 
