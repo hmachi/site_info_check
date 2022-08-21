@@ -26,4 +26,4 @@ geolocation = get_geolocation(domain, ip['ipv4'], nowStr)
 
 document = create_document(whois, ip, geolocation, url, domain, nowStr)
 
-upload_document(document)
+# upload_document(document)

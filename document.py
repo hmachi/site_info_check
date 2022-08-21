@@ -53,9 +53,6 @@ def replace_text(paragraph, whois, ip, geolocation, now, url, domain):
             str(int(str(now.strftime('%Y'))[1:]) - 18) + "年" + \
             now.strftime('%m') + "月" + now.strftime('%d') + "日"
 
-    if paragraph.text == "${investigation_date}":
-        # 令和${before_year}年${before_month}月${before_day}日～令和${after_year}年${after_month}月${after_day}日
-        paragraph.text = ""  # TODO どんな値を入れればいいか
     if paragraph.text == "${name}":
         paragraph.text = ip["company"]
     if paragraph.text == "${url}":
@@ -63,17 +60,13 @@ def replace_text(paragraph, whois, ip, geolocation, now, url, domain):
     if paragraph.text == "${url_brackets}":
         paragraph.text = "【" + url + "】"
     if paragraph.text == "${address}":
-        paragraph.text = geolocation["country"]  # TODO 英語でも問題ないか
-    if paragraph.text == "${phone}":
-        paragraph.text = "不明"  # TODO どんな値を入れればいいか
-    if paragraph.text == "${contractor}":
-        paragraph.text = "不明"  # TODO どんな値を入れればいいか
+        paragraph.text = geolocation["country"]
     if paragraph.text == "${domain}":
         paragraph.text = domain
     if paragraph.text == "${host}":
         paragraph.text = "ホスト名：" + ip["host"]
     if paragraph.text == "${area}":
-        paragraph.text = "エリア：" + geolocation["country"]  # TODO 英語でも問題ないか
+        paragraph.text = "エリア：" + geolocation["country"]
     if paragraph.text == "${ipv4}":
         paragraph.text = ip["ipv4"]
 
