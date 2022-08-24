@@ -68,6 +68,12 @@ def get_ip(domain, nowStr):
 
         driver.set_window_size(1000, 870)
 
+        # ヘッダー要素を非表示にする
+        driver.execute_script(
+            "arguments[0].setAttribute('style','display: none;')", driver.find_element_by_xpath(
+                '/html/body/div[1]/header'
+            ))
+
         driver.save_screenshot(screenshot_path + str(index) + ".png")
         data['screenshot_path_list'].append(
             screenshot_path + str(index) + ".png")

@@ -45,6 +45,12 @@ def get_geolocation(domain, ipv4, nowStr):
 
         driver.set_window_size(1000, 850)
 
+        # ヘッダー要素を非表示にする
+        driver.execute_script(
+            "arguments[0].setAttribute('style','display: none;')", driver.find_element_by_xpath(
+                '/html/body/div[2]/div/div'
+            ))
+
         driver.save_screenshot(screenshot_path + str(index) + ".png")
         data['screenshot_path_list'].append(
             screenshot_path + str(index) + ".png")
