@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from tkinter import messagebox
 import tkinter as tk
 
+from site_info import get_site_info
 from whois import get_whois
 from ip import get_ip
 from geolocation import get_geolocation
@@ -22,12 +23,15 @@ now = datetime.datetime.now(datetime.timezone(
     datetime.timedelta(hours=9)))
 nowStr = now.strftime('%Y%m%d%H%M%S')
 
+site_info = get_site_info(url, domain, nowStr)
+
 whois = get_whois(domain)
-ip = get_ip(domain, nowStr)
+ip = get_ip(url, domain, nowStr)
 geolocation = get_geolocation(domain, ip['ipv4'], nowStr)
 
 # 報告書wordファイルの作成
-document = create_document(whois, ip, geolocation, url, domain, nowStr)
+document = create_document(
+    site_info, whois, ip, geolocation, url, domain, nowStr)
 
 # googleドキュメントへのアップロード
 # upload_document(document)

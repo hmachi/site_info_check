@@ -5,14 +5,14 @@ from docx import Document
 from pptx.util import Inches
 
 
-def create_document(whois, ip, geolocation, url, domain, nowStr):
+def create_document(site_info, whois, ip, geolocation, url, domain, nowStr):
 
     new_doc_name = domain + "_" + nowStr + ".docx"
     new_doc_path = "document/" + new_doc_name
 
     shutil.copyfile("document/document.docx", new_doc_path)
 
-    doc = docx.Document(new_doc_path)
+    doc = Document(new_doc_path)
 
     now = datetime.datetime.now(datetime.timezone(
         datetime.timedelta(hours=9)))
@@ -20,6 +20,12 @@ def create_document(whois, ip, geolocation, url, domain, nowStr):
     # 行単位の置換
     for paragraph in doc.paragraphs:
         replace_text(paragraph, whois, ip, geolocation, now, url, domain)
+
+        # 入力したURLの画像を設定する
+        if paragraph.text == '${site_screenshot}':
+            paragraph.text = ""
+            r = paragraph.add_run()
+            r.add_picture(site_info['screenshot_path'], width=Inches(6.2))
 
     paragraphs = (paragraph
                   for table in doc.tables

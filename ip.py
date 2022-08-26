@@ -1,9 +1,8 @@
 from time import sleep
+from common import setup_chrome_webdriver, disp_content
 
-from common import setup_chrome_webdriver
 
-
-def get_ip(domain, nowStr):
+def get_ip(url, domain, nowStr):
 
     driver = setup_chrome_webdriver()
 
@@ -11,9 +10,9 @@ def get_ip(domain, nowStr):
 
     sleep(1)
 
-    domain_input = driver.find_element_by_xpath(
+    url_input = driver.find_element_by_xpath(
         '//*[@id="site_report_query"]/div/input')
-    domain_input.send_keys(domain)
+    url_input.send_keys(url)
 
     sleep(1)
 
@@ -63,59 +62,133 @@ def get_ip(domain, nowStr):
         data["host"] = driver.find_element_by_xpath(
             '//*[@id="network_table_section"]/div[2]/div[1]/table[1]/tbody/tr[3]/td').text
 
-        index = 1
-        screenshot_path = 'screenshot/' + domain + '_ip_' + nowStr + '_'
+        screenshot_path = 'screenshot/' + domain + '_ip_' + nowStr
 
-        driver.set_window_size(1000, 870)
+        # 取得要素以外
+        not_disp_content_list = [
+            '/html/body/div[1]/header',
+            '/html/body/div[1]/main/header',
+            '/html/body/div[1]/main/div[1]/div/div',
+            '/html/body/div[1]/main/section',
+            '//*[@id="ip_geolocation_section"]',  # TODO 必要かどうか
+            '/html/body/footer',
+            '/html/body/footer/div',
+            '/html/body/footer/a',
+            '/html/body/div[1]/main/div[2]'
+        ]
 
-        # ヘッダー要素を非表示にする
-        driver.execute_script(
-            "arguments[0].setAttribute('style','display: none;')", driver.find_element_by_xpath(
-                '/html/body/div[1]/header'
-            ))
+        # 取得要素セクション
+        disp_content_list = [
+            '//*[@id="background_table_section"]',
+            '//*[@id="network_table_section"]',
+            '//*[@id="ssl_table_section"]',
+            '//*[@id="ssl_chain_table_section"]',
+            '//*[@id="history_table_section"]',
+            '//*[@id="spf_table_section"]',
+            '//*[@id="dmarc_table_section"]',
+            '//*[@id="webbugs_section"]',
+            '//*[@id="technology_table_section"]',
+        ]
 
-        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        # 取得要素以外を非表示にする
+        disp_content(driver, not_disp_content_list, "", True)
+
+        # Background以外を非表示にする
+        disp_content(driver, disp_content_list, 0, False)
+
+        driver.set_window_size(1000, 450)
+        sleep(0.5)
+        driver.save_screenshot(screenshot_path + "_background.png")
         data['screenshot_path_list'].append(
-            screenshot_path + str(index) + ".png")
-        index += 1
+            screenshot_path + "_background.png")
 
-        driver.execute_script("window.scrollBy(0, 430);")
-        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        # Network以外非表示にする
+        disp_content(driver, disp_content_list, 1, False)
+
+        driver.set_window_size(1000, 1000)
+        sleep(0.5)
+        driver.save_screenshot(screenshot_path + "_network.png")
         data['screenshot_path_list'].append(
-            screenshot_path + str(index) + ".png")
-        index += 1
+            screenshot_path + "_Network.png")
 
-        driver.execute_script("window.scrollBy(0, 620);")
-        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        # SSL/TLS以外非表示にする
+        disp_content(driver, disp_content_list, 2, False)
+
+        driver.set_window_size(1000, 1500)
+        sleep(0.5)
+        driver.save_screenshot(screenshot_path + "_ssltls1.png")
         data['screenshot_path_list'].append(
-            screenshot_path + str(index) + ".png")
-        index += 1
-
-        driver.execute_script("window.scrollBy(0, 400);")
-        driver.save_screenshot(screenshot_path + str(index) + ".png")
+            screenshot_path + "_ssltls1.png")
+        driver.execute_script("window.scrollBy(0, 2000);")
+        sleep(0.5)
+        driver.save_screenshot(screenshot_path + "_ssltls2.png")
         data['screenshot_path_list'].append(
-            screenshot_path + str(index) + ".png")
-        index += 1
+            screenshot_path + "_ssltls2.png")
 
-        driver.execute_script("window.scrollBy(0, 400);")
-        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        # SSL Certificate Chain以外非表示にする
+        disp_content(driver, disp_content_list, 3, False)
+        # 要素を表示する
+        driver.find_element_by_xpath(
+            '//*[@id="ssl_chain_table_section"]').click()
+
+        driver.set_window_size(1000, 600)
+        sleep(0.5)
+        driver.save_screenshot(screenshot_path + "_sslcertificatechain.png")
         data['screenshot_path_list'].append(
-            screenshot_path + str(index) + ".png")
-        index += 1
+            screenshot_path + "_sslcertificatechain.png")
 
-        driver.execute_script("window.scrollBy(0, 500);")
-        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        # Hosting History以外非表示にする
+        disp_content(driver, disp_content_list, 4, False)
+
+        driver.set_window_size(1000, 500)
+        sleep(0.5)
+        driver.save_screenshot(screenshot_path + "_hostinghistory.png")
         data['screenshot_path_list'].append(
-            screenshot_path + str(index) + ".png")
-        index += 1
+            screenshot_path + "_hostinghistory.png")
 
-        driver.execute_script("window.scrollBy(0, 500);")
-        driver.save_screenshot(screenshot_path + str(index) + ".png")
+        # Sender Policy Framework以外非表示にする
+        disp_content(driver, disp_content_list, 5, False)
+
+        driver.set_window_size(1000, 600)
+        sleep(0.5)
+        driver.save_screenshot(screenshot_path + "_senderpolicyframework.png")
         data['screenshot_path_list'].append(
-            screenshot_path + str(index) + ".png")
+            screenshot_path + "_senderpolicyframework.png")
 
-    except:
-        print("error")
+        # DMARC以外非表示にする
+        disp_content(driver, disp_content_list, 6, False)
+
+        driver.set_window_size(1000, 700)
+        sleep(0.5)
+        driver.save_screenshot(screenshot_path + "_dmarc.png")
+        data['screenshot_path_list'].append(
+            screenshot_path + "_dmarc.png")
+
+        # Web Trackers以外非表示にする
+        disp_content(driver, disp_content_list, 7, False)
+
+        driver.set_window_size(1000, 800)
+        sleep(0.5)
+        driver.save_screenshot(screenshot_path + "_webtracker.png")
+        data['screenshot_path_list'].append(
+            screenshot_path + "_webtracker.png")
+
+        # Site Technology以外非表示にする
+        disp_content(driver, disp_content_list, 8, False)
+
+        driver.set_window_size(1000, 900)
+        sleep(0.5)
+        driver.save_screenshot(screenshot_path + "_sitetechnology1.png")
+        data['screenshot_path_list'].append(
+            screenshot_path + "_sitetechnology1.png")
+        driver.execute_script("window.scrollBy(0, 1000);")
+        sleep(0.5)
+        driver.save_screenshot(screenshot_path + "_sitetechnology2.png")
+        data['screenshot_path_list'].append(
+            screenshot_path + "_sitetechnology2.png")
+
+    except Exception as e:
+        print(e.message)
 
     driver.close()
 

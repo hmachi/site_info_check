@@ -56,8 +56,8 @@ def get_whois(domain):
         data["registrar"] = driver.find_element_by_xpath(
             '//*[@id="wls7"]/td').text
 
-    except:
-        print("error")
+    except Exception as e:
+        print(e.message)
 
     driver.close()
 
