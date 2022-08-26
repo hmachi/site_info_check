@@ -74,7 +74,7 @@ def get_geolocation(domain, ipv4, nowStr):
         # 地図以外非表示
         disp_content(driver, disp_content_list, 0, False)
 
-        driver.set_window_size(1000, 800)
+        driver.set_window_size(1000, 750)
         driver.execute_script("window.scrollBy(0, -1000);")
         sleep(0.5)
         driver.save_screenshot(screenshot_path + "_map1.png")
@@ -108,6 +108,6 @@ def get_geolocation(domain, ipv4, nowStr):
     except Exception as e:
         print(e.message)
 
-    # driver.close()
+    driver.close()
 
     return data
