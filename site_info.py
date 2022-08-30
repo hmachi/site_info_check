@@ -1,5 +1,6 @@
 from time import sleep
 from common import setup_chrome_webdriver
+import os
 
 
 def get_site_info(url, domain, nowStr):
@@ -10,14 +11,19 @@ def get_site_info(url, domain, nowStr):
 
     sleep(1)
 
-    screenshot_path = 'screenshot/' + domain + '_site_' + nowStr + ".png"
+    try:
+        os.mkdir('screenshot/' + domain + "/site")
+    except:
+        print("フォルダ作成エラー")
+
+    screenshot_path = 'screenshot/' + domain + '/site/'
 
     driver.set_window_size(1000, 800)
-    sleep(0.5)
-    driver.save_screenshot(screenshot_path)
+    sleep(1)
+    driver.save_screenshot(screenshot_path + "top_" + nowStr + ".png")
 
     driver.close()
 
     return {
-        'screenshot_path': screenshot_path
+        'screenshot_path': screenshot_path + "top_" + nowStr + ".png"
     }

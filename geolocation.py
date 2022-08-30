@@ -1,7 +1,8 @@
 from time import sleep
 from selenium.webdriver.common.alert import Alert
+import os
 
-from common import setup_chrome_webdriver, disp_content
+from common import setup_chrome_webdriver, disp_content, get_full_screenshot_image
 
 
 def get_geolocation(domain, ipv4, nowStr):
@@ -24,7 +25,7 @@ def get_geolocation(domain, ipv4, nowStr):
     driver.find_element_by_xpath(
         '/html/body/div[2]/div/div[1]/div[3]/div/div/form/div/div/button').click()
 
-    sleep(5)
+    sleep(10)
 
     data = {
         "country": "",
@@ -40,7 +41,12 @@ def get_geolocation(domain, ipv4, nowStr):
         data["country"] = driver.find_element_by_xpath(
             '//*[@id="ipresult"]/div[2]/div[1]/table/tbody/tr[2]/td[1]').text
 
-        screenshot_path = 'screenshot/' + domain + '_geolocation_' + nowStr + '_'
+        try:
+            os.mkdir('screenshot/' + domain + "/geolocation")
+        except:
+            print("フォルダ作成エラー")
+
+        screenshot_path = 'screenshot/' + domain + '/geolocation/'
 
         not_disp_content_list = [
             '/html/body/div[1]',
@@ -54,6 +60,7 @@ def get_geolocation(domain, ipv4, nowStr):
             '/html/body/div[3]/div/div[1]/div[7]',
             '/html/body/div[3]/div/div[2]',
             '/html/body/div[4]',
+            '//*[@id="ipresult"]/div[2]/div[2]',
         ]
 
         disp_content_list = [
@@ -62,8 +69,16 @@ def get_geolocation(domain, ipv4, nowStr):
             '/html/body/div[3]/div/div[1]/div[5]/div/div/div[2]'
         ]
 
-        # 取得要素以外を非表示にする
-        disp_content(driver, not_disp_content_list, "", True)
+        notDispResult = False
+        processCount = 0
+        while notDispResult == False:
+            # 取得要素以外を非表示にする
+            notDispResult = disp_content(
+                driver, not_disp_content_list, "", True)
+            processCount += 1
+
+            if processCount > 3:
+                return False
 
         # padding削除
         driver.execute_script(
@@ -71,39 +86,51 @@ def get_geolocation(domain, ipv4, nowStr):
                 '/html/body/div[3]'
             ))
 
-        # 地図以外非表示
-        disp_content(driver, disp_content_list, 0, False)
+        # 地図テーブル以外非表示
+        if disp_content(driver, disp_content_list, [0], False):
+            # 画面サイズ変更
+            driver.set_window_size(800, 750)
+            # 上部までスクロール
+            driver.execute_script("window.scrollBy(0, -1000);")
 
-        driver.set_window_size(1000, 750)
-        driver.execute_script("window.scrollBy(0, -1000);")
-        sleep(0.5)
-        driver.save_screenshot(screenshot_path + "_map1.png")
-        data['screenshot_path_list'].append(
-            screenshot_path + "_map1.png")
-        driver.set_window_size(1000, 1000)
-        driver.execute_script("window.scrollBy(0, 1000);")
-        sleep(0.5)
-        driver.save_screenshot(screenshot_path + "_map2.png")
-        data['screenshot_path_list'].append(
-            screenshot_path + "_map2.png")
+            file_path = screenshot_path + "map_" + nowStr + ".png"
+            driver.save_screenshot(file_path)
+            data['screenshot_path_list'].append(file_path)
+
+            # 地図の非表示
+            driver.execute_script(
+                "arguments[0].setAttribute('style','display: none;')", driver.find_element_by_xpath(
+                    '//*[@id="ipresult"]/div[2]/div[1]/table/tbody/tr[1]/td/div'
+                ))
+
+            # 画面サイズ変更
+            driver.set_window_size(800, 850)
+
+            file_path = screenshot_path + "mapdata_" + nowStr + ".png"
+            get_full_screenshot_image(driver, file_path)
+            data['screenshot_path_list'].append(file_path)
 
         # Try Our IP2Location Geolocation API以外非表示
-        disp_content(driver, disp_content_list, 1, False)
+        if disp_content(driver, disp_content_list, [1], False):
+            # 画面サイズ変更
+            driver.set_window_size(800, 1000)
 
-        driver.set_window_size(1000, 1000)
-        sleep(0.5)
-        driver.save_screenshot(screenshot_path + "_ip2location.png")
-        data['screenshot_path_list'].append(
-            screenshot_path + "_ip2location.png")
+            sleep(1)
+
+            file_path = screenshot_path + "ip2location_" + nowStr + ".png"
+            get_full_screenshot_image(driver, file_path)
+            data['screenshot_path_list'].append(file_path)
 
         # Try Our IP2Proxy Geolocation API以外非表示
-        disp_content(driver, disp_content_list, 2, False)
+        if disp_content(driver, disp_content_list, [2], False):
+            # 画面サイズ変更
+            driver.set_window_size(800, 900)
 
-        driver.set_window_size(1000, 800)
-        sleep(0.5)
-        driver.save_screenshot(screenshot_path + "_ip2proxy.png")
-        data['screenshot_path_list'].append(
-            screenshot_path + "_ip2proxy.png")
+            sleep(1)
+
+            file_path = screenshot_path + "ip2proxy_" + nowStr + ".png"
+            get_full_screenshot_image(driver, file_path)
+            data['screenshot_path_list'].append(file_path)
 
     except Exception as e:
         print(e.message)
