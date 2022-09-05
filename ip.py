@@ -27,14 +27,6 @@ def get_ip(url, domain, nowStr):
         '//*[@id="consent-form"]/div/button[2]').click()
 
     data = {
-        "domain_name": "",
-        "expiration_date": "",
-        "domain_status": "",
-        "name_server": "",
-        "registrant_email": "",
-        "admin_email": "",
-        "creation_date": "",
-        "registrar": "",
         "ipv4": "",
         "company": "",
         "host": "",
@@ -46,16 +38,6 @@ def get_ip(url, domain, nowStr):
         driver.find_element_by_xpath(
             '/html/body/div[1]/main/header/div/div/h1'
         )
-
-        data["domain_name"] = driver.find_element_by_xpath(
-            '//*[@id="network_table_section"]/div[2]/div[1]/table[2]/tbody/tr[1]/td/a').text
-        data["expiration_date"] = ""  # driver.find_element_by_xpath('').text
-        data["domain_status"] = ""  # driver.find_element_by_xpath('').text
-        data["name_server"] = ""  # driver.find_element_by_xpath('').text
-        data["registrant_email"] = ""  # driver.find_element_by_xpath('').text
-        data["admin_email"] = ""  # driver.find_element_by_xpath('').text
-        data["creation_date"] = ""  # driver.find_element_by_xpath('').text
-        data["registrar"] = ""  # driver.find_element_by_xpath('').text
 
         data["ipv4"] = driver.find_element_by_xpath(
             '//*[@id="ip_address"]').text
@@ -262,7 +244,7 @@ def get_ip(url, domain, nowStr):
                 data['screenshot_path_list'].append(file_path)
 
     except Exception as e:
-        print(e.message)
+        print(e)
 
     driver.close()
 

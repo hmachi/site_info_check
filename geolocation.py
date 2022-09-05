@@ -133,7 +133,7 @@ def get_geolocation(domain, ipv4, nowStr):
             data['screenshot_path_list'].append(file_path)
 
     except Exception as e:
-        print(e.message)
+        print(e)
 
     driver.close()
 

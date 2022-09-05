@@ -56,6 +56,7 @@ def process(url):
 
 
 def main():
+
     print("")
     print("urlを入力")
     print("例）https://example.com")
