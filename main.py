@@ -32,27 +32,31 @@ def process(url):
     root.lift()
     root.focus_force()
 
-    site_info = get_site_info(url, domain, nowStr)
+    try:
+        site_info = get_site_info(url, domain, nowStr)
 
-    whois = get_whois(domain)
-    ip = get_ip(url, domain, nowStr)
+        whois = get_whois(domain)
+        ip = get_ip(url, domain, nowStr)
 
-    if ip == False:
-        messagebox.showinfo("報告書自動作成処理", "画像取得処理失敗")
-    else:
-        geolocation = get_geolocation(domain, ip['ipv4'], nowStr)
-
-        if geolocation == False:
-            messagebox.showinfo("報告書自動作成処理", "画像取得処理失敗")
+        if ip == False:
+            messagebox.showerror("報告書自動作成処理", "画像取得処理失敗")
         else:
-            # 報告書wordファイルの作成
-            document = create_document(
-                site_info, whois, ip, geolocation, url, domain, nowStr)
+            geolocation = get_geolocation(domain, ip['ipv4'], nowStr)
 
-            # googleドキュメントへのアップロード
-            # upload_document(document)
+            if geolocation == False:
+                messagebox.showerror("報告書自動作成処理", "画像取得処理失敗")
+            else:
+                # 報告書wordファイルの作成
+                document = create_document(
+                    site_info, whois, ip, geolocation, url, domain, nowStr)
 
-            messagebox.showinfo("報告書自動作成処理", "完了!!")
+                # googleドキュメントへのアップロード
+                # upload_document(document)
+
+                messagebox.showinfo("報告書自動作成処理", "完了!!")
+    except Exception as e:
+        print(e)
+        messagebox.showerror("報告書自動作成処理", "処理失敗")
 
 
 def main():
