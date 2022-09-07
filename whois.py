@@ -41,6 +41,7 @@ def get_whois(domain):
         rowList = result.split("\n")
 
         for row in rowList:
+            # ドメイン名
             if 'Domain Name:' in row:
                 isAdd = False
                 for column in row.split():
@@ -49,6 +50,7 @@ def get_whois(domain):
                             data["domain_name"] += column + " "
                     if column == 'Name:':
                         isAdd = True
+            # 有効期限1
             if 'Expiration Date:' in row:
                 isAdd = False
                 for column in row.split():
@@ -57,6 +59,17 @@ def get_whois(domain):
                             data["expiration_date"] += column[0:10] + " "
                     if column == 'Date:':
                         isAdd = True
+            # 有効期限2
+            if 'Expiry Date:' in row:
+                isAdd = False
+                for column in row.split():
+                    if isAdd:
+                        if column:
+                            data["expiration_date"] += column[0:10] + " "
+                    if column == 'Date:':
+                        isAdd = True
+
+            # ドメインステータス
             if 'Domain Status:' in row:
                 if data["domain_status"] != "":
                     data["domain_status"] += "\n"
@@ -68,6 +81,7 @@ def get_whois(domain):
                             isAdd = False
                     if column == 'Status:':
                         isAdd = True
+            # ネームサーバー
             if 'Name Server:' in row:
                 if data["name_server"] != "":
                     data["name_server"] += "\n"
@@ -78,6 +92,7 @@ def get_whois(domain):
                             data["name_server"] += column + " "
                     if column == 'Server:':
                         isAdd = True
+            # 登録者メールアドレス
             if 'Registrant Email:' in row:
                 isAdd = False
                 for column in row.split():
@@ -86,6 +101,7 @@ def get_whois(domain):
                             data["registrant_email"] += column + " "
                     if column == 'Email:':
                         isAdd = True
+            # 管理者メールアドレス
             if 'Admin Email:' in row:
                 isAdd = False
                 for column in row.split():
@@ -94,6 +110,7 @@ def get_whois(domain):
                             data["admin_email"] += column + " "
                     if column == 'Email:':
                         isAdd = True
+            # 作成日
             if 'Creation Date:' in row:
                 isAdd = False
                 for column in row.split():
@@ -102,6 +119,7 @@ def get_whois(domain):
                             data["creation_date"] += column[0:10] + " "
                     if column == 'Date:':
                         isAdd = True
+            # レジストラ
             if 'Registrar:' in row:
                 isAdd = False
                 for column in row.split():
@@ -111,8 +129,10 @@ def get_whois(domain):
                     if column == 'Registrar:':
                         isAdd = True
 
+        # パターン2の画面
         if data["domain_name"] == "":
             for row in rowList:
+                # ドメイン名
                 if '[Domain Name]' in row:
                     isAdd = False
                     for column in row.split():
@@ -121,6 +141,7 @@ def get_whois(domain):
                                 data["domain_name"] += column + " "
                         if column == 'Name]':
                             isAdd = True
+                # 有効期限
                 if '[State]' in row:
                     isAdd = False
                     for column in row.split():
@@ -130,6 +151,7 @@ def get_whois(domain):
                                     ")", "").replace("(", "") + " "
                         if column == 'Connected':
                             isAdd = True
+                # ドメインステータス
                 if '[State]' in row:
                     if data["domain_status"] != "":
                         data["domain_status"] += "\n"
@@ -140,6 +162,7 @@ def get_whois(domain):
                                 data["domain_status"] += column + " "
                         if column == '[State]':
                             isAdd = True
+                # ネームサーバー
                 if '[Name Server]' in row:
                     if data["name_server"] != "":
                         data["name_server"] += "\n"
@@ -150,6 +173,7 @@ def get_whois(domain):
                                 data["name_server"] += column + " "
                         if column == 'Server]':
                             isAdd = True
+                # 登録日
                 if '[Registered Date]' in row:
                     isAdd = False
                     for column in row.split():
@@ -158,6 +182,15 @@ def get_whois(domain):
                                 data["creation_date"] += column + " "
                         if column == 'Date]':
                             isAdd = True
+
+                data["registrant_email"] = "不明"
+                data["admin_email"] = "不明"
+                data["registrar"] = "不明"
+
+        if "Please query" in data["registrant_email"]:
+            data["registrant_email"] = "不明"
+        if "Please query" in data["admin_email"]:
+            data["admin_email"] = "不明"
 
     except Exception as e:
         print(e)
