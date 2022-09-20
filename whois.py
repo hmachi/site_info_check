@@ -35,8 +35,14 @@ def get_whois(domain):
 
     try:
 
-        result = driver.find_element_by_xpath(
-            '//*[@id="registrarData"]').text
+        result = ""
+
+        try:
+            result = driver.find_element_by_xpath(
+                '//*[@id="registrarData"]').text
+        except:
+            result = driver.find_element_by_xpath(
+                '//*[@id="registryData"]').text
 
         rowList = result.split("\n")
 
@@ -131,12 +137,7 @@ def get_whois(domain):
 
         # パターン2の画面
         if data["domain_name"] == "":
-        
-            result = driver.find_element_by_xpath(
-                '//*[@id="registryData"]').text
 
-            rowList = result.split("\n")
-        
             for row in rowList:
                 # ドメイン名
                 if '[Domain Name]' in row:
