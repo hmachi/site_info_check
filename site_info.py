@@ -12,7 +12,7 @@ def get_site_info(url, domain, nowStr):
     sleep(1)
 
     try:
-        os.mkdir('screenshot/' + domain + "/site")
+        os.makedirs('screenshot/' + domain + "/site", exist_ok=True)
     except:
         print("フォルダ作成エラー")
 

@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from tkinter import messagebox
 import tkinter as tk
 import os
+import shutil
 
 from site_info import get_site_info
 from whois import get_whois
@@ -22,7 +23,11 @@ def process(url):
     nowStr = now.strftime('%Y%m%d%H%M%S')
 
     try:
-        os.mkdir('screenshot/' + domain)
+        path = 'screenshot/' + domain
+        if os.path.exists(path):
+            shutil.rmtree(path)
+
+        os.makedirs(path, exist_ok=True)
     except:
         print("フォルダ作成エラー")
 

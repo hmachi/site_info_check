@@ -13,7 +13,10 @@ def get_geolocation(domain, ipv4, nowStr):
 
     sleep(1)
 
-    Alert(driver).accept()
+    try:
+        Alert(driver).accept()
+    except:
+        print("アラート無し")
 
     ip_input = driver.find_element_by_xpath(
         '/html/body/div[2]/div/div[1]/div[3]/div/div/form/div/input')
@@ -42,7 +45,7 @@ def get_geolocation(domain, ipv4, nowStr):
             '//*[@id="ipresult"]/div[2]/div[1]/table/tbody/tr[2]/td[1]').text
 
         try:
-            os.mkdir('screenshot/' + domain + "/geolocation")
+            os.makedirs('screenshot/' + domain + "/geolocation", exist_ok=True)
         except:
             print("フォルダ作成エラー")
 

@@ -47,7 +47,7 @@ def get_ip(url, domain, nowStr):
             '//*[@id="network_table_section"]/div[2]/div[1]/table[1]/tbody/tr[3]/td').text
 
         try:
-            os.mkdir('screenshot/' + domain + "/ip")
+            os.makedirs('screenshot/' + domain + "/ip", exist_ok=True)
         except:
             print("フォルダ作成エラー")
 
