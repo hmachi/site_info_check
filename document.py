@@ -1,4 +1,3 @@
-import docx
 import shutil
 import datetime
 from docx import Document

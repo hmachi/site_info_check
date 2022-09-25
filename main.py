@@ -77,16 +77,21 @@ def main():
         url = input()
 
         if url == "N":
-            return
+            return "N"
 
         if url:
-            process(url)
+            if ('https://' in url) or ('http://' in url):
+                process(url)
 
-            print("")
-            print("追加でURLを入力する場合、Yを入力してEnter")
-            print("Y以外を入力してEnterで処理終了")
+                print("")
+                print("追加でURLを入力する場合、Yを入力してEnter")
+                print("Y以外を入力してEnterで処理終了")
 
-            return input()
+                return input()
+            else:
+                print("urlには、https:// または http://で始まるものを入力してください")
+                url = ""
+
         else:
             print("")
             print("urlを入力")
