@@ -77,7 +77,7 @@ def replace_text(paragraph, whois, ip, geolocation, now, url, domain):
         if paragraph.text == "${url_brackets}":
             paragraph.text = "【" + url + "】"
         if paragraph.text == "${address}":
-            paragraph.text = geolocation["country"] if geolocation["country"] != "" else "不明"
+            paragraph.text = ip["address"] if ip["address"] != "" else "不明"
         if paragraph.text == "${domain}":
             paragraph.text = domain
         if paragraph.text == "${host}":
@@ -85,8 +85,8 @@ def replace_text(paragraph, whois, ip, geolocation, now, url, domain):
                 (ip["host"] if ip["host"] != "" else "不明")
         if paragraph.text == "${area}":
             paragraph.text = "エリア：" + \
-                (geolocation["country"]
-                 if geolocation["country"] != "" else "不明")
+                (ip["area"]
+                 if ip["area"] != "" else "不明")
         if paragraph.text == "${ipv4}":
             paragraph.text = ip["ipv4"] if ip["ipv4"] != "" else "不明"
 

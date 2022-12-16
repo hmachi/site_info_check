@@ -2,6 +2,7 @@ from time import sleep
 import os
 
 from common import setup_chrome_webdriver, disp_content, get_full_screenshot_image
+from selenium.webdriver.common.by import By
 
 
 def get_ip(url, domain, nowStr):
@@ -12,39 +13,81 @@ def get_ip(url, domain, nowStr):
 
     sleep(1)
 
-    url_input = driver.find_element_by_xpath(
+    try:
+        driver.find_element(
+            By.XPATH,
+            '//*[@id="consent-form"]/div[2]/div/button[1]').click()
+    except:
+        print("処理無し")
+
+    url_input = driver.find_element(
+        By.XPATH,
         '//*[@id="site_report_query"]/div/input')
     url_input.send_keys(url)
 
     sleep(1)
 
-    driver.find_element_by_xpath(
+    driver.find_element(
+        By.XPATH,
         '//*[@id="site_report_query"]/input').click()
 
     sleep(15)
 
-    driver.find_element_by_xpath(
-        '//*[@id="consent-form"]/div/button[2]').click()
+    try:
+        driver.find_element(
+            By.XPATH,
+            '//*[@id="consent-form"]/div/button[2]').click()
+    except:
+        print("処理無し")
 
     data = {
         "ipv4": "",
         "company": "",
         "host": "",
+        "address": "",
+        "area": "",
         "screenshot_path_list": []
     }
 
     try:
         # 検索処理が成功していることの確認
-        driver.find_element_by_xpath(
+        driver.find_element(
+            By.XPATH,
             '/html/body/div[1]/main/header/div/div/h1'
         )
 
-        data["ipv4"] = driver.find_element_by_xpath(
+        data["ipv4"] = driver.find_element(
+            By.XPATH,
             '//*[@id="ip_address"]').text
-        data["company"] = driver.find_element_by_xpath(
+        data["company"] = driver.find_element(
+            By.XPATH,
             '//*[@id="background_table_section"]/div[2]/div/table[1]/tbody/tr[1]/td').text
-        data["host"] = driver.find_element_by_xpath(
+        data["host"] = driver.find_element(
+            By.XPATH,
             '//*[@id="network_table_section"]/div[2]/div[1]/table[1]/tbody/tr[3]/td').text
+        data["address"] = driver.find_element(
+            By.XPATH,
+            '//*[@id="advertised_country"]').text
+
+        rowNo = 1
+        area = ""
+        while True:
+            try:
+                area = driver.find_element(
+                    By.XPATH,
+                    '//*[@id= "network_table_section"]/div[2]/table/tbody/tr[' + str(rowNo) + ']/td[2]/span').text
+
+                rowNo += 1
+            except Exception as e:
+                break
+
+        areaSplit = area.splitlines()
+        if len(areaSplit) == 2:
+            data["area"] = areaSplit[1]
+        else:
+            data["area"] = area
+
+        print(data["area"])
 
         try:
             os.makedirs('screenshot/' + domain + "/ip", exist_ok=True)
@@ -59,7 +102,7 @@ def get_ip(url, domain, nowStr):
             '/html/body/div[1]/main/header',
             '/html/body/div[1]/main/div[1]/div/div',
             '/html/body/div[1]/main/section',
-            '//*[@id="ip_geolocation_section"]',  # TODO 必要かどうか
+            '//*[@id="ip_geolocation_section"]',
             '/html/body/footer',
             '/html/body/footer/div',
             '/html/body/footer/a',
@@ -154,7 +197,8 @@ def get_ip(url, domain, nowStr):
 
             # セクションヘッダー削除
             driver.execute_script(
-                "arguments[0].setAttribute('style','display: none;')", driver.find_element_by_xpath(
+                "arguments[0].setAttribute('style','display: none;')", driver.find_element(
+                    By.XPATH,
                     '//*[@id="ssl_table_section"]/div[1]'
                 ))
 
@@ -166,7 +210,8 @@ def get_ip(url, domain, nowStr):
         # SSL Certificate Chain以外非表示にする
         if disp_content(driver, disp_content_list, [3], False):
             # 要素を表示する
-            driver.find_element_by_xpath(
+            driver.find_element(
+                By.XPATH,
                 '//*[@id="ssl_chain_table_section"]').click()
 
             sleep(1)
@@ -218,7 +263,8 @@ def get_ip(url, domain, nowStr):
 
             # セクションヘッダー削除
             driver.execute_script(
-                "arguments[0].setAttribute('style','display: none;')", driver.find_element_by_xpath(
+                "arguments[0].setAttribute('style','display: none;')", driver.find_element(
+                    By.XPATH,
                     '//*[@id="technology_table_section"]/div[1]'
                 ))
 

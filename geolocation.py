@@ -3,6 +3,7 @@ from selenium.webdriver.common.alert import Alert
 import os
 
 from common import setup_chrome_webdriver, disp_content, get_full_screenshot_image
+from selenium.webdriver.common.by import By
 
 
 def get_geolocation(domain, ipv4, nowStr):
@@ -18,31 +19,30 @@ def get_geolocation(domain, ipv4, nowStr):
     except:
         print("アラート無し")
 
-    ip_input = driver.find_element_by_xpath(
-        '/html/body/div[2]/div/div[1]/div[3]/div/div/form/div/input')
+    ip_input = driver.find_element(
+        By.XPATH,
+        '/html/body/div[2]/div/div[1]/div[2]/div/div/form/div/input')
     ip_input.clear()
     ip_input.send_keys(ipv4)
 
     sleep(1)
 
-    driver.find_element_by_xpath(
-        '/html/body/div[2]/div/div[1]/div[3]/div/div/form/div/div/button').click()
+    driver.find_element(
+        By.XPATH,
+        '/html/body/div[2]/div/div[1]/div[2]/div/div/form/div/div/button').click()
 
     sleep(10)
 
     data = {
-        "country": "",
         "screenshot_path_list": []
     }
 
     try:
         # 検索処理が成功していることの確認
-        driver.find_element_by_xpath(
+        driver.find_element(
+            By.XPATH,
             '//*[@id="ipresult"]/div[2]/div[1]/table/tbody/tr[2]/td[1]'
         )
-
-        data["country"] = driver.find_element_by_xpath(
-            '//*[@id="ipresult"]/div[2]/div[1]/table/tbody/tr[2]/td[1]').text
 
         try:
             os.makedirs('screenshot/' + domain + "/geolocation", exist_ok=True)
@@ -85,7 +85,8 @@ def get_geolocation(domain, ipv4, nowStr):
 
         # padding削除
         driver.execute_script(
-            "arguments[0].setAttribute('style','padding-top: 0px;')", driver.find_element_by_xpath(
+            "arguments[0].setAttribute('style','padding-top: 0px;')", driver.find_element(
+                By.XPATH,
                 '/html/body/div[3]'
             ))
 
@@ -102,7 +103,8 @@ def get_geolocation(domain, ipv4, nowStr):
 
             # 地図の非表示
             driver.execute_script(
-                "arguments[0].setAttribute('style','display: none;')", driver.find_element_by_xpath(
+                "arguments[0].setAttribute('style','display: none;')", driver.find_element(
+                    By.XPATH,
                     '//*[@id="ipresult"]/div[2]/div[1]/table/tbody/tr[1]/td/div'
                 ))
 

@@ -3,6 +3,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
 from PIL import Image
 import io
+from selenium.webdriver.common.by import By
 
 
 def setup_chrome_webdriver():
@@ -20,20 +21,20 @@ def disp_content(driver, disp_content_list, dispIndexList=[], isAllHidden=True):
         try:
             if isAllHidden:
                 driver.execute_script(
-                    "arguments[0].setAttribute('style','display: none;')", driver.find_element_by_xpath(
-                        disp_content
-                    ))
+                    "arguments[0].setAttribute('style','display: none;')", driver.find_element(By.XPATH,
+                                                                                               disp_content
+                                                                                               ))
             else:
                 if index in dispIndexList:
                     driver.execute_script(
-                        "arguments[0].setAttribute('style','display: block;')", driver.find_element_by_xpath(
-                            disp_content
-                        ))
+                        "arguments[0].setAttribute('style','display: block;')", driver.find_element(By.XPATH,
+                                                                                                    disp_content
+                                                                                                    ))
                 else:
                     driver.execute_script(
-                        "arguments[0].setAttribute('style','display: none;')", driver.find_element_by_xpath(
-                            disp_content
-                        ))
+                        "arguments[0].setAttribute('style','display: none;')", driver.find_element(By.XPATH,
+                                                                                                   disp_content
+                                                                                                   ))
         except:
             if isAllHidden:
                 print(disp_content + "のコンテンツがありません")

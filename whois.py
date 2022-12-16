@@ -1,6 +1,7 @@
 from time import sleep
 
 from common import setup_chrome_webdriver
+from selenium.webdriver.common.by import By
 
 
 def get_whois(domain):
@@ -11,13 +12,15 @@ def get_whois(domain):
 
     sleep(1)
 
-    domain_input = driver.find_element_by_xpath(
+    domain_input = driver.find_element(
+        By.XPATH,
         '//*[@id="query"]')
     domain_input.send_keys(domain)
 
     sleep(1)
 
-    driver.find_element_by_xpath(
+    driver.find_element(
+        By.XPATH,
         '//*[@id="page-wrapper"]/div[1]/form/button').click()
 
     sleep(5)
@@ -38,10 +41,12 @@ def get_whois(domain):
         result = ""
 
         try:
-            result = driver.find_element_by_xpath(
+            result = driver.find_element(
+                By.XPATH,
                 '//*[@id="registrarData"]').text
         except:
-            result = driver.find_element_by_xpath(
+            result = driver.find_element(
+                By.XPATH,
                 '//*[@id="registryData"]').text
 
         rowList = result.split("\n")
